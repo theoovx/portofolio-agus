@@ -90,19 +90,19 @@ const projects = [
 
       {
         type: "image",
-        src: "assets/projects/pkl-maintenance-ac-2.jpg",
+        src: "pkl-maintenance-ac-2.jpg",
         label: "Perawatan AC"
       },
 
       {
         type: "image",
-        src: "assets/projects/pkl-maintenance-ac-outdoor.jpg",
+        src: "pkl-maintenance-ac-outdoor.jpg",
         label: "Perawatan AC outdoor"
       },
 
       {
         type: "image",
-        src: "assets/projects/pkl-maintenance-ac.jpg",
+        src: "pkl-maintenance-ac.jpg",
         label: "Maintenance AC"
       }
 
@@ -125,13 +125,13 @@ const projects = [
 
       {
         type: "image",
-        src: "assets/projects/pkl-memahat-dan-memasang-penerangan-ditangga.jpg",
+        src: "pkl-memahat-dan-memasang-penerangan-ditangga.jpg",
         label: "Penerangan tangga"
       },
 
       {
         type: "image",
-        src: "assets/projects/pkl-pemasangan-lampu-sorot.jpg",
+        src: "pkl-pemasangan-lampu-sorot.jpg",
         label: "Pemasangan lampu sorot"
       }
 
@@ -154,7 +154,7 @@ const projects = [
 
       {
         type: "image",
-        src: "assets/projects/pkl-memperbaiki-jaringan-internet-dan-penerangan-jalan.jpg",
+        src: "pkl-memperbaiki-jaringan-internet-dan-penerangan-jalan.jpg",
         label: "Jaringan internet dan PJU"
       }
 
@@ -177,7 +177,7 @@ const projects = [
 
       {
         type: "image",
-        src: "assets/projects/pkl-mengecat.jpg",
+        src: "pkl-mengecat.jpg",
         label: "Pekerjaan pengecatan"
       }
 
@@ -200,7 +200,7 @@ const projects = [
 
       {
         type: "image",
-        src: "assets/projects/bbpvp-mempelajari-tentang-pengecekan-grounding.jpg",
+        src: "bbpvp-mempelajari-tentang-pengecekan-grounding.jpg",
         label: "Pengecekan grounding"
       }
 
@@ -223,7 +223,7 @@ const projects = [
 
       {
         type: "image",
-        src: "assets/projects/bbpvp-mempelajari-tentang-k3.jpg",
+        src: "bbpvp-mempelajari-tentang-k3.jpg",
         label: "K3"
       }
 
@@ -246,7 +246,7 @@ const projects = [
 
       {
         type: "video",
-        src: "assets/projects/bbpvp-video-memasang-komponen-smart-building-bisa-dikontrol-dengan-hp.mp4",
+        src: "bbpvp-video-memasang-komponen-smart-building-bisa-dikontrol-dengan-hp.mp4",
         label: "Smart building"
       }
 
@@ -343,8 +343,12 @@ function renderProjects(filter = "all") {
         </p>
 
         <span class="project-open">
-          Lihat karya ↗
-        </span>
+  Lihat karya
+  <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 19 19 5"></path>
+    <path d="M9 5h10v10"></path>
+  </svg>
+</span>
 
       </div>
 
@@ -901,20 +905,13 @@ audio.loop = true;
 
 
 function updateMusicButton() {
-
-  musicToggle.textContent =
-    audio.paused
-      ? "▶"
-      : "Ⅱ";
-
-
-  musicToggle.setAttribute(
-    "aria-label",
-    audio.paused
-      ? "Putar musik"
-      : "Jeda musik"
-  );
-
+  if (audio.paused) {
+    musicToggle.classList.remove("is-playing");
+    musicToggle.setAttribute("aria-label", "Play music");
+  } else {
+    musicToggle.classList.add("is-playing");
+    musicToggle.setAttribute("aria-label", "Pause music");
+  }
 }
 
 
