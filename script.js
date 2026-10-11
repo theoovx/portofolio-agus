@@ -380,4 +380,36 @@
 
   syncPlayer();
 
+
+  /* -------------------------------------------------------
+     MENU AKTIF SAAT SCROLL
+  ------------------------------------------------------- */
+
+  const navLinks = [...document.querySelectorAll(".nav a")];
+
+  if ("IntersectionObserver" in window) {
+    const linkById = new Map(
+      navLinks.map(link => [link.getAttribute("href").slice(1), link])
+    );
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          navLinks.forEach(link => link.removeAttribute("aria-current"));
+
+          const active = linkById.get(entry.target.id);
+          if (active) active.setAttribute("aria-current", "true");
+        });
+      },
+      { rootMargin: "-35% 0px -55% 0px" }
+    );
+
+    linkById.forEach((link, id) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+  }
+
 })();
