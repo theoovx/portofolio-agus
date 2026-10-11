@@ -1,1142 +1,920 @@
 /* =========================================================
-   AGUS TAUFIK RAHMAN
-   Portfolio interaction
+   AGUS TAUFIK RAHMAN | PORTOFOLIO
+   Terang, ringan, tanpa blur kaca dan animasi berjalan terus
 ========================================================= */
+
+:root {
+  --paper: #eef1f4;
+  --surface: #ffffff;
+  --ink: #101820;
+  --ink-2: #46515c;
+  --line: #cdd5dc;
+  --tint: #e2e7ec;
+  --accent: #ffc400;
+  --focus: #0b57a4;
+
+  --head: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --wrap: 1040px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  line-height: 1.65;
+  padding-bottom: 88px;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a { color: inherit; }
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: min(var(--wrap), calc(100% - 40px));
+  margin-inline: auto;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.skip:focus { left: 8px; }
 
 
 /* =========================================================
-   LOADER + WELCOME
+   TOPBAR
 ========================================================= */
 
-const loader =
-  document.getElementById("loader");
-
-const loaderPercent =
-  document.getElementById("loaderPercent");
-
-const loaderProgress =
-  document.getElementById("loaderProgress");
-
-const welcome =
-  document.getElementById("welcome");
-
-const enterBtn =
-  document.getElementById("enterBtn");
-
-const nav =
-  document.getElementById("nav");
-
-
-let loadingProgress = 0;
-
-
-const loaderTimer = setInterval(() => {
-
-  loadingProgress +=
-    Math.floor(Math.random() * 5) + 2;
-
-
-  if (loadingProgress >= 100) {
-
-    loadingProgress = 100;
-
-    clearInterval(loaderTimer);
-
-
-    setTimeout(() => {
-
-      loader.classList.add("hidden");
-
-    }, 500);
-
-  }
-
-
-  loaderPercent.textContent =
-    `${loadingProgress}%`;
-
-  loaderProgress.style.width =
-    `${loadingProgress}%`;
-
-}, 45);
-
-
-enterBtn.addEventListener("click", () => {
-
-  welcome.classList.add("hidden");
-
-  nav.classList.add("visible");
-
-});
-
-
-/* =========================================================
-   PROJECT DATA
-========================================================= */
-
-const projects = [
-
-  {
-    id: "ac",
-
-    category: "PKL",
-
-    title: "Maintenance AC",
-
-    description:
-      "Melakukan perawatan AC indoor dan outdoor, termasuk membantu proses pemeriksaan, pembersihan, dan memastikan unit tetap bekerja dengan baik selama kegiatan Engineering.",
-
-    media: [
-
-      {
-        type: "image",
-        src: "pkl-maintenance-ac-2.jpg",
-        label: "Perawatan AC"
-      },
-
-      {
-        type: "image",
-        src: "pkl-maintenance-ac-outdoor.jpg",
-        label: "Perawatan AC outdoor"
-      },
-
-      {
-        type: "image",
-        src: "pkl-maintenance-ac.jpg",
-        label: "Maintenance AC"
-      }
-
-    ]
-
-  },
-
-
-  {
-    id: "lighting",
-
-    category: "PKL",
-
-    title: "Penerangan",
-
-    description:
-      "Mengerjakan instalasi dan perbaikan penerangan di area fasilitas, mulai dari pemasangan jalur lampu pada tangga hingga pemasangan lampu sorot.",
-
-    media: [
-
-      {
-        type: "image",
-        src: "pkl-memahat-dan-memasang-penerangan-ditangga.jpg",
-        label: "Penerangan tangga"
-      },
-
-      {
-        type: "image",
-        src: "pkl-pemasangan-lampu-sorot.jpg",
-        label: "Pemasangan lampu sorot"
-      }
-
-    ]
-
-  },
-
-
-  {
-    id: "network",
-
-    category: "PKL",
-
-    title: "Jaringan & PJU",
-
-    description:
-      "Membantu perbaikan jaringan internet serta pekerjaan pada penerangan jalan umum, termasuk penanganan jalur dan instalasi yang diperlukan di area fasilitas.",
-
-    media: [
-
-      {
-        type: "image",
-        src: "pkl-memperbaiki-jaringan-internet-dan-penerangan-jalan.jpg",
-        label: "Jaringan internet dan PJU"
-      }
-
-    ]
-
-  },
-
-
-  {
-    id: "support",
-
-    category: "PKL",
-
-    title: "Dukungan Engineering",
-
-    description:
-      "Mengerjakan berbagai pekerjaan pendukung untuk menjaga kondisi fasilitas tetap terawat, termasuk pekerjaan pengecatan pada area yang membutuhkan perawatan.",
-
-    media: [
-
-      {
-        type: "image",
-        src: "pkl-mengecat.jpg",
-        label: "Pekerjaan pengecatan"
-      }
-
-    ]
-
-  },
-
-
-  {
-    id: "grounding",
-
-    category: "BBPVP",
-
-    title: "Pengecekan Grounding",
-
-    description:
-      "Mempelajari cara melakukan pengecekan grounding sebagai bagian dari sistem keselamatan kelistrikan bangunan dan memahami pentingnya jalur pembumian yang baik.",
-
-    media: [
-
-      {
-        type: "image",
-        src: "bbpvp-mempelajari-tentang-pengecekan-grounding.jpg",
-        label: "Pengecekan grounding"
-      }
-
-    ]
-
-  },
-
-
-  {
-    id: "k3",
-
-    category: "BBPVP",
-
-    title: "K3",
-
-    description:
-      "Mempelajari penerapan keselamatan dan kesehatan kerja sebelum dan selama praktik, termasuk mengenali potensi bahaya serta bekerja dengan prosedur yang lebih aman.",
-
-    media: [
-
-      {
-        type: "image",
-        src: "bbpvp-mempelajari-tentang-k3.jpg",
-        label: "K3"
-      }
-
-    ]
-
-  },
-
-
-  {
-    id: "smart",
-
-    category: "BBPVP",
-
-    title: "Smart Building",
-
-    description:
-      "Mempraktikkan pemasangan komponen smart building dan menghubungkan sistem agar perangkat dapat dikontrol melalui HP sebagai bagian dari integrasi bangunan cerdas.",
-
-    media: [
-
-      {
-        type: "video",
-        src: "bbpvp-video-memasang-komponen-smart-building-bisa-dikontrol-dengan-hp.mp4",
-        label: "Smart building"
-      }
-
-    ]
-
-  }
-
-];
-
-
-/* =========================================================
-   PROJECT RENDER
-========================================================= */
-
-const projectGrid =
-  document.getElementById("projectGrid");
-
-
-function renderProjects(filter = "all") {
-
-  projectGrid.innerHTML = "";
-
-
-  const filteredProjects =
-    filter === "all"
-      ? projects
-      : projects.filter(
-          project =>
-            project.category === filter
-        );
-
-
-  filteredProjects.forEach(project => {
-
-    const card =
-      document.createElement("article");
-
-
-    card.className =
-      "project-card";
-
-
-    const firstMedia =
-      project.media[0];
-
-
-    let mediaHTML = "";
-
-
-    if (firstMedia.type === "video") {
-
-      mediaHTML = `
-        <video
-          src="${firstMedia.src}"
-          muted
-          autoplay
-          loop
-          playsinline
-          preload="metadata">
-        </video>
-      `;
-
-    } else {
-
-      mediaHTML = `
-        <img
-          src="${firstMedia.src}"
-          alt="${firstMedia.label}"
-          loading="lazy">
-      `;
-
-    }
-
-
-    card.innerHTML = `
-
-      <div class="project-card-image">
-        ${mediaHTML}
-      </div>
-
-
-      <div class="project-card-content">
-
-        <span class="project-category">
-          ${project.category}
-        </span>
-
-        <h3>
-          ${project.title}
-        </h3>
-
-        <p class="project-card-description">
-          ${project.description}
-        </p>
-
-        <span class="project-open">
-  Lihat karya
-  <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M5 19 19 5"></path>
-    <path d="M9 5h10v10"></path>
-  </svg>
-</span>
-
-      </div>
-
-    `;
-
-
-    card.addEventListener(
-      "click",
-      () => {
-        openProject(project.id);
-      }
-    );
-
-
-    projectGrid.appendChild(card);
-
-  });
-
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(238, 241, 244, 0.97);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: 60px;
+}
+
+.brand {
+  font-family: var(--head);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar { display: none; }
+
+.nav a {
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav a:hover {
+  background: var(--tint);
+  color: var(--ink);
 }
 
 
-renderProjects();
-
-
 /* =========================================================
-   PROJECT FILTER
+   HERO
 ========================================================= */
 
-const filters =
-  document.querySelectorAll(".filter-btn");
-
-
-filters.forEach(filter => {
-
-  filter.addEventListener(
-    "click",
-    () => {
-
-      filters.forEach(item => {
-
-        item.classList.remove("active");
-
-      });
-
-
-      filter.classList.add("active");
-
-
-      renderProjects(
-        filter.dataset.filter
-      );
-
-    }
-  );
-
-});
-
-
-/* =========================================================
-   PROJECT MODAL
-========================================================= */
-
-const projectModal =
-  document.getElementById("projectModal");
-
-const projectClose =
-  document.getElementById("modalClose");
-
-const modalCategory =
-  document.getElementById("modalCategory");
-
-const modalTitle =
-  document.getElementById("modalTitle");
-
-const modalDescription =
-  document.getElementById("modalDescription");
-
-const modalMedia =
-  document.getElementById("modalMedia");
-
-
-function openProject(projectId) {
-
-  const project =
-    projects.find(
-      item => item.id === projectId
-    );
-
-
-  if (!project) return;
-
-
-  modalCategory.textContent =
-    project.category;
-
-
-  modalTitle.textContent =
-    project.title;
-
-
-  modalDescription.textContent =
-    project.description;
-
-
-  modalMedia.innerHTML = "";
-
-
-  project.media.forEach(media => {
-
-    const item =
-      document.createElement("div");
-
-
-    item.className =
-      "modal-media";
-
-
-    if (media.type === "image") {
-
-      item.innerHTML = `
-        <img
-          src="${media.src}"
-          alt="${media.label}"
-          loading="lazy">
-      `;
-
-
-      const image =
-        item.querySelector("img");
-
-
-      image.addEventListener(
-        "click",
-        () => {
-
-          openViewer(
-            media.src,
-            "image"
-          );
-
-        }
-      );
-
-
-    } else {
-
-      item.innerHTML = `
-        <video
-          src="${media.src}"
-          controls
-          playsinline
-          preload="metadata">
-        </video>
-      `;
-
-
-      const video =
-        item.querySelector("video");
-
-
-      video.addEventListener(
-        "dblclick",
-        () => {
-
-          openViewer(
-            media.src,
-            "video"
-          );
-
-        }
-      );
-
-    }
-
-
-    modalMedia.appendChild(item);
-
-  });
-
-
-  projectModal.classList.add("active");
-
-  projectModal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.style.overflow =
-    "hidden";
-
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: center;
+  padding: 72px 0 48px;
+}
+
+.hero-role {
+  margin-bottom: 14px;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}
+
+h1 {
+  font-family: var(--head);
+  font-size: clamp(3.4rem, 10vw, 7rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.hero-tagline {
+  max-width: 26ch;
+  margin-top: 26px;
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.hero-desc {
+  max-width: 52ch;
+  margin-top: 14px;
+  color: var(--ink-2);
+  font-size: 1.05rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: transparent;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: #fff;
+}
+
+.btn-primary {
+  background: var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--ink);
+  color: var(--accent);
+}
+
+.hero-photo {
+  width: 100%;
+  max-width: 380px;
+  justify-self: end;
+}
+
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #dfe5ea;
+  border-bottom: 8px solid var(--accent);
 }
 
 
-function closeProject() {
+/* =========================================================
+   PLAT DATA
+========================================================= */
 
-  projectModal.classList.remove(
-    "active"
-  );
+.plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--line);
+}
 
-  projectModal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 11px 11px, #aab4be 0 3px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 11px) 11px, #aab4be 0 3px, transparent 3.5px),
+    radial-gradient(circle at 11px calc(100% - 11px), #aab4be 0 3px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 11px) calc(100% - 11px), #aab4be 0 3px, transparent 3.5px);
+}
 
-  document.body.style.overflow =
-    "";
+.plate > div {
+  padding: 28px 24px;
+  background: var(--surface);
+}
 
+.plate dt {
+  margin-bottom: 4px;
+  color: var(--ink-2);
+  font-size: 0.82rem;
+}
+
+.plate dd {
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.plate dd span {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  font-weight: 400;
 }
 
 
-projectClose.addEventListener(
-  "click",
-  closeProject
-);
-
-
-projectModal.addEventListener(
-  "click",
-  event => {
-
-    if (
-      event.target.classList.contains(
-        "modal-backdrop"
-      )
-    ) {
-
-      closeProject();
-
-    }
-
-  }
-);
-
-
 /* =========================================================
-   VIEWER
+   SECTION
 ========================================================= */
 
-const viewer =
-  document.getElementById("viewer");
+.section {
+  padding: 88px 0 0;
+}
 
-const viewerClose =
-  document.getElementById("viewerClose");
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  font-family: var(--head);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1;
+}
 
-const viewerMedia =
-  document.getElementById("viewerMedia");
+h2::before {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 0.8em;
+  background: var(--accent);
+}
 
-const rotateLeft =
-  document.getElementById("rotateLeft");
+.section-note {
+  max-width: 60ch;
+  margin: -12px 0 28px;
+  color: var(--ink-2);
+}
 
-const rotateRight =
-  document.getElementById("rotateRight");
+.prose {
+  max-width: 68ch;
+}
 
-
-let currentImage = null;
-let rotation = 0;
-
-
-function openViewer(
-  src,
-  type = "image"
-) {
-
-  viewerMedia.innerHTML = "";
-
-  currentImage = null;
-
-  rotation = 0;
-
-
-  if (type === "image") {
-
-    const image =
-      document.createElement("img");
-
-
-    image.src = src;
-
-    image.alt = "Media";
-
-
-    image.style.transform =
-      "rotate(0deg)";
-
-
-    viewerMedia.appendChild(
-      image
-    );
-
-
-    currentImage =
-      image;
-
-
-    rotateLeft.style.display =
-      "grid";
-
-    rotateRight.style.display =
-      "grid";
-
-
-  } else {
-
-    const video =
-      document.createElement("video");
-
-
-    video.src = src;
-
-    video.controls = true;
-
-    video.playsInline = true;
-
-    video.preload = "metadata";
-
-
-    viewerMedia.appendChild(
-      video
-    );
-
-
-    rotateLeft.style.display =
-      "none";
-
-    rotateRight.style.display =
-      "none";
-
-
-    video.addEventListener(
-      "loadedmetadata",
-      () => {
-
-        video.play().catch(
-          () => {}
-        );
-
-      }
-    );
-
-  }
-
-
-  viewer.classList.add("active");
-
-  viewer.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.style.overflow =
-    "hidden";
-
+.prose p {
+  margin-bottom: 1.1em;
+  color: #27323c;
+  font-size: 1.05rem;
 }
 
 
-function closeViewer() {
+/* =========================================================
+   PENGALAMAN
+========================================================= */
 
-  const video =
-    viewerMedia.querySelector(
-      "video"
-    );
+.xp {
+  list-style: none;
+  border-top: 2px solid var(--ink);
+}
 
+.xp-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 22px;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+}
 
-  if (video) {
+.xp-logo {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
 
-    video.pause();
+.xp-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
-  }
+.xp-logo-text {
+  font-family: var(--head);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
 
+.xp-type {
+  color: var(--ink-2);
+  font-size: 0.88rem;
+}
 
-  viewer.classList.remove(
-    "active"
-  );
+.xp-body h3 {
+  margin-top: 2px;
+  font-family: var(--head);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
 
+.xp-loc {
+  margin-top: 6px;
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
 
-  viewer.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+.xp-body > p:not(.xp-type):not(.xp-loc) {
+  max-width: 70ch;
+  margin-top: 14px;
+  color: #27323c;
+}
 
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px;
+  list-style: none;
+}
 
-  viewerMedia.innerHTML = "";
-
-  currentImage = null;
-
-  document.body.style.overflow =
-    "";
-
+.tags li {
+  padding: 2px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 0.8rem;
 }
 
 
-viewerClose.addEventListener(
-  "click",
-  closeViewer
-);
+/* ---------- Alat ---------- */
 
+.tools {
+  margin-top: 64px;
+}
 
-viewer.addEventListener(
-  "click",
-  event => {
+.tools h3 {
+  margin-bottom: 18px;
+  font-family: var(--head);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
 
-    if (
-      event.target.classList.contains(
-        "viewer-backdrop"
-      )
-    ) {
+.tool-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
 
-      closeViewer();
+.tool-group {
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
 
-    }
+.tool-group h4 {
+  margin-bottom: 8px;
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
 
-  }
-);
+.tool-group ul {
+  list-style: none;
+}
 
+.tool-group li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
 
-/* =========================================================
-   ROTATE IMAGE
-========================================================= */
+.tool-group strong { font-weight: 600; }
 
-rotateLeft.addEventListener(
-  "click",
-  () => {
-
-    if (!currentImage) return;
-
-
-    rotation -= 90;
-
-
-    currentImage.style.transform =
-      `rotate(${rotation}deg)`;
-
-  }
-);
-
-
-rotateRight.addEventListener(
-  "click",
-  () => {
-
-    if (!currentImage) return;
-
-
-    rotation += 90;
-
-
-    currentImage.style.transform =
-      `rotate(${rotation}deg)`;
-
-  }
-);
-
-
-/* =========================================================
-   CERTIFICATE VIEWER
-========================================================= */
-
-const certificateCards =
-  document.querySelectorAll(
-    ".certificate-card"
-  );
-
-
-certificateCards.forEach(card => {
-
-  card.addEventListener(
-    "click",
-    () => {
-
-      const src =
-        card.dataset.certificate;
-
-
-      if (!src) return;
-
-
-      openViewer(
-        src,
-        "image"
-      );
-
-    }
-  );
-
-});
-
-
-/* =========================================================
-   ESCAPE KEY
-========================================================= */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key !== "Escape") {
-      return;
-    }
-
-
-    if (
-      viewer.classList.contains(
-        "active"
-      )
-    ) {
-
-      closeViewer();
-
-      return;
-
-    }
-
-
-    if (
-      projectModal.classList.contains(
-        "active"
-      )
-    ) {
-
-      closeProject();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   MUSIC PLAYER
-========================================================= */
-
-const audio =
-  document.getElementById("audio");
-
-const musicToggle =
-  document.getElementById("musicToggle");
-
-const musicClose =
-  document.getElementById("musicClose");
-
-const musicPlayer =
-  document.getElementById("musicPlayer");
-
-const musicProgress =
-  document.getElementById("musicProgress");
-
-const progressContainer =
-  document.querySelector(
-    ".music-progress"
-  );
-
-
-audio.loop = true;
-
-
-function updateMusicButton() {
-  if (audio.paused) {
-    musicToggle.classList.remove("is-playing");
-    musicToggle.setAttribute("aria-label", "Play music");
-  } else {
-    musicToggle.classList.add("is-playing");
-    musicToggle.setAttribute("aria-label", "Pause music");
-  }
+.tool-group span {
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  text-align: right;
 }
 
 
-musicToggle.addEventListener(
-  "click",
-  async () => {
+/* =========================================================
+   KARYA + SERTIFIKAT
+========================================================= */
 
-    if (audio.paused) {
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
 
-      try {
+.filters::-webkit-scrollbar { display: none; }
 
-        await audio.play();
+.chip {
+  flex: none;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.9rem;
+  transition: background 0.15s, color 0.15s;
+}
 
-      } catch (error) {
+.chip:hover { border-color: var(--ink); }
 
-        console.log(
-          "Audio belum dapat diputar:",
-          error
-        );
+.chip.is-active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
 
-      }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
 
-    } else {
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  text-align: left;
+  transition: border-color 0.15s;
+}
 
-      audio.pause();
+.card:hover { border-color: var(--ink); }
 
-    }
+.card-media {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #dfe5ea;
+}
 
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-    updateMusicButton();
+.card-media.is-doc { background: #f4f6f8; }
 
-  }
-);
+.card-media.is-doc img { object-fit: contain; }
 
+.card-media.is-video .play {
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  border-left: 26px solid var(--ink);
+  margin-left: 8px;
+}
 
-audio.addEventListener(
-  "play",
-  updateMusicButton
-);
+.card-body {
+  display: block;
+  padding: 18px 20px 22px;
+}
 
+.card-cat {
+  display: block;
+  color: var(--ink-2);
+  font-size: 0.82rem;
+}
 
-audio.addEventListener(
-  "pause",
-  updateMusicButton
-);
+.card-title {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--head);
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
 
+.card-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  margin-top: 8px;
+  overflow: hidden;
+  color: #33404b;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
 
-audio.addEventListener(
-  "timeupdate",
-  () => {
+.card-desc-full {
+  display: block;
+  -webkit-line-clamp: unset;
+}
 
-    if (!audio.duration) {
-      return;
-    }
-
-
-    const percentage =
-      (
-        audio.currentTime /
-        audio.duration
-      ) * 100;
-
-
-    musicProgress.style.width =
-      `${percentage}%`;
-
-  }
-);
-
-
-audio.addEventListener(
-  "ended",
-  () => {
-
-    audio.currentTime = 0;
-
-    audio.play().catch(
-      () => {}
-    );
-
-  }
-);
-
-
-/* Music progress */
-
-progressContainer.addEventListener(
-  "click",
-  event => {
-
-    if (!audio.duration) {
-      return;
-    }
-
-
-    const rect =
-      progressContainer.getBoundingClientRect();
-
-
-    const position =
-      (
-        event.clientX -
-        rect.left
-      ) / rect.width;
-
-
-    audio.currentTime =
-      position * audio.duration;
-
-  }
-);
-
-
-/* Close music */
-
-musicClose.addEventListener(
-  "click",
-  () => {
-
-    audio.pause();
-
-    musicPlayer.style.display =
-      "none";
-
-  }
-);
+.card-open {
+  display: inline-block;
+  margin-top: 14px;
+  border-bottom: 3px solid var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
 
 
 /* =========================================================
-   SMOOTH NAVIGATION
+   KONTAK
 ========================================================= */
 
-document
-  .querySelectorAll(
-    'a[href^="#"]'
-  )
-  .forEach(link => {
+.contact-list {
+  max-width: 640px;
+  list-style: none;
+  border-top: 2px solid var(--ink);
+}
 
-    link.addEventListener(
-      "click",
-      event => {
+.contact-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 6px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
 
-        const targetId =
-          link.getAttribute(
-            "href"
-          );
+.contact-list a:hover { background: var(--surface); }
 
+.contact-list span:first-child { font-weight: 600; }
 
-        if (
-          !targetId ||
-          targetId === "#"
-        ) {
+.contact-list span:last-child {
+  color: var(--ink-2);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
 
-          return;
+.contact-cv { margin-top: 28px; }
 
-        }
-
-
-        const target =
-          document.querySelector(
-            targetId
-          );
-
-
-        if (!target) {
-          return;
-        }
-
-
-        event.preventDefault();
-
-
-        target.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-
-      }
-    );
-
-  });
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 96px;
+  padding: 24px 0 36px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: 0.85rem;
+}
 
 
 /* =========================================================
-   MEDIA ERROR PROTECTION
+   DIALOG KARYA
 ========================================================= */
 
-document.addEventListener(
-  "error",
-  event => {
+.dlg {
+  width: min(960px, calc(100% - 24px));
+  max-height: 92vh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+}
 
-    const element =
-      event.target;
+.dlg::backdrop { background: rgba(16, 24, 32, 0.6); }
 
+.dlg-in {
+  position: relative;
+  padding: 32px;
+}
 
-    if (
-      element.tagName !== "IMG"
-    ) {
+.dlg-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  font-size: 1.4rem;
+  line-height: 1;
+}
 
-      return;
+.dlg-close:hover { border-color: var(--ink); }
 
-    }
+.dlg-cat {
+  color: var(--ink-2);
+  font-size: 0.85rem;
+}
 
+.dlg h2 {
+  display: block;
+  margin: 2px 0 0;
+  padding-right: 56px;
+}
 
-    const parent =
-      element.closest(
-        ".project-card-image, .modal-media, .certificate-image"
-      );
+.dlg h2::before { display: none; }
 
+.dlg-desc {
+  max-width: 64ch;
+  margin-top: 14px;
+  color: #27323c;
+}
 
-    if (parent) {
+.dlg-media {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
 
-      parent.classList.add(
-        "media-error"
-      );
+.dlg-media img,
+.dlg-media video {
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--tint);
+}
 
-    }
-
-  },
-  true
-);
+.dlg-media img { cursor: zoom-in; }
 
 
 /* =========================================================
-   INITIAL STATE
+   PRATINJAU MEDIA
 ========================================================= */
 
-updateMusicButton();
+.viewer {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+
+.viewer::backdrop { background: rgba(8, 12, 18, 0.92); }
+
+.viewer-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 60px 12px 88px;
+}
+
+.viewer-stage img,
+.viewer-stage video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.25s;
+}
+
+.viewer-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.viewer-tools {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.viewer-tools button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.viewer-close:hover,
+.viewer-tools button:hover { background: rgba(255, 255, 255, 0.24); }
+
+
+/* =========================================================
+   MUSIK
+========================================================= */
+
+.player {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(300px, calc(100% - 32px));
+  padding: 8px 10px 8px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.player-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #dfe5ea;
+  object-fit: cover;
+}
+
+.player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-title {
+  display: block;
+  overflow: hidden;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-bar {
+  display: flex;
+  align-items: center;
+  height: 16px;
+  cursor: pointer;
+}
+
+.player-track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: var(--line);
+}
+
+.player-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--ink);
+}
+
+.player-btn {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.player-btn:hover { background: var(--ink); color: var(--accent); }
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 860px) {
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 48px 0 40px;
+  }
+
+  .hero-photo {
+    max-width: 300px;
+    justify-self: start;
+  }
+
+  .plate { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .section { padding-top: 72px; }
+
+  .tool-groups { grid-template-columns: 1fr; }
+}
+
+
+@media (max-width: 640px) {
+
+  .brand { display: none; }
+
+  .topbar-in { justify-content: flex-start; }
+
+  .nav a { padding: 8px 10px; font-size: 0.88rem; }
+
+  .grid { grid-template-columns: 1fr; }
+
+  .xp-item {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 14px;
+    padding: 24px 0;
+  }
+
+  .xp-logo { width: 48px; height: 48px; padding: 6px; border-radius: 8px; }
+
+  .xp-logo-text { font-size: 1.1rem; }
+
+  .xp-body h3 { font-size: 1.5rem; }
+
+  .dlg-in { padding: 26px 18px 22px; }
+
+  .dlg-media { grid-template-columns: 1fr; }
+
+  .contact-list a { flex-direction: column; gap: 2px; }
+
+  .contact-list span:last-child { text-align: left; }
+}
+
+
+@media (max-width: 520px) {
+
+  .plate { grid-template-columns: 1fr; }
+
+  .plate > div { padding: 22px 24px; }
+}
